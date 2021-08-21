@@ -1,0 +1,34 @@
+<html>
+
+<script>
+    let socket = new WebSocket("ws://localhost:8090");
+
+    socket.onopen = (e) => {
+        alert("[open] Connection established");
+        alert("Sending to server");
+        socket.send("My name is John");
+    };
+
+    socket.onmessage = (event) => {
+        document.getElementById("number").innerText = event.data
+    };
+
+    socket.onclose = (event) => {
+        if (event.wasClean) {
+            alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        } else {
+            // e.g. server process killed or network down
+            // event.code is usually 1006 in this case
+            alert('[close] Connection died');
+        }
+    };
+
+    socket.onerror = (error) => {
+        alert(`[error] ${error.message}`);
+    };
+
+</script>
+<body>
+<h1 id="number">0</h1>
+</body>
+</html>
