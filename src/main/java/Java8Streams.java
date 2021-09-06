@@ -8,4 +8,5 @@ public class Java8Streams {
         Stream<String> stringStream = integerStream.map(i -> "a" + i);
         stringStream.forEach(System.out::println);
     }
+
 }

@@ -10,15 +10,16 @@ import akka.stream.scaladsl.Source
 import akka.util.ByteString
 
 import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.DurationInt
 import scala.io.StdIn
 import scala.util.Random
 
-object StreamingAkkaHttp extends App {
+object AkkaHttpStreaming extends App {
 
   implicit val actorSystem: ActorSystem[SpawnProtocol.Command] = ActorSystem(SpawnProtocol(), "simpleHttpStreaming")
   implicit val executionContext: ExecutionContext = actorSystem.executionContext
 
-  val number = Source.fromIterator(() => Iterator.continually(Random.nextInt()))
+  val number = Source.fromIterator(() => Iterator.continually(Random.nextInt())).throttle(1, 50.milliseconds)
     .log("From Source").withAttributes(Attributes.logLevels(Logging.DebugLevel))
 
 
