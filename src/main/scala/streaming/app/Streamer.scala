@@ -19,8 +19,7 @@ import akka.http.scaladsl.model.HttpMethods._
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-object ServerApp extends App {
-
+object Streamer extends App {
   implicit val system: ActorSystem[SpawnProtocol.Command] =
     ActorSystem(SpawnProtocol(), "Server")
   import system.executionContext
@@ -30,7 +29,11 @@ object ServerApp extends App {
   val numberStream: Source[Int, NotUsed] =
     Source
       .fromIterator(() => Iterator.from(1))
-      .throttle(1, 50.millis) // infinite source
+      .map { x =>
+        printf(x + ", ")
+        x
+      }
+  //.throttle(1, 50.millis) // infinite source
 
   val requestHandler: HttpRequest => HttpResponse = {
     case HttpRequest(GET, Uri.Path("/"), _, _, _) =>

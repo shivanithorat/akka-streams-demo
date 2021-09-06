@@ -39,7 +39,11 @@ object Doubler extends App {
         Http().singleRequest(HttpRequest(uri = "http://localhost:8080/"))
       )
       .flatMapConcat(res => {
-        res.entity.dataBytes.map(x => x.utf8String.dropRight(1).toInt * 2)
+        res.entity.dataBytes.map { x =>
+          val num = x.utf8String.dropRight(1).toInt * 2
+          printf(num + ", ")
+          num
+        }
       })
   }
 
