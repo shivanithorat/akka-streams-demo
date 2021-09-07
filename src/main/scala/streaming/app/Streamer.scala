@@ -1,28 +1,35 @@
 package streaming.app
 
-import akka.actor.typed.{ActorSystem, SpawnProtocol}
-import akka.http.scaladsl.Http
-
 import akka.NotUsed
-import akka.http.scaladsl.model.ws.Message
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
-import akka.stream.scaladsl.{Flow, Source}
-import akka.util.ByteString
-
-import scala.concurrent.duration._
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.SpawnProtocol
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.ContentTypes
+import akka.http.scaladsl.model.HttpEntity
+import akka.http.scaladsl.model.HttpMethods._
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.HttpMethods._
+import akka.http.scaladsl.model.ws.Message
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import akka.stream.scaladsl.Flow
+import akka.stream.scaladsl.Source
+import akka.util.ByteString
+
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.concurrent.duration._
+import scala.util.Failure
+import scala.util.Success
 
 object Streamer extends App {
   implicit val system: ActorSystem[SpawnProtocol.Command] =
     ActorSystem(SpawnProtocol(), "Server")
   import system.executionContext
+
+  private val payloadSize = 10
+  def attachPayload(num: Int): String =
+    num.toString + "-" + ("*" * payloadSize) + "\n"
 
   //*************************************************
 
@@ -40,7 +47,7 @@ object Streamer extends App {
       HttpResponse(entity =
         HttpEntity(
           ContentTypes.`text/plain(UTF-8)`,
-          numberStream.map(n => ByteString(s"$n\n"))
+          numberStream.map(n => ByteString(attachPayload(n)))
         )
       )
     case _ => HttpResponse(StatusCodes.NotFound)

@@ -31,6 +31,13 @@ object Doubler extends App {
     ActorSystem(SpawnProtocol(), "Doubler")
   import system.executionContext
 
+  private val payloadSize = 10
+  def attachPayload(num: Int): String =
+    num.toString + "-" + ("*" * payloadSize) + "\n"
+
+  def extractNum(str: ByteString): Int =
+    str.utf8String.takeWhile(_ != '-').toInt
+
   //*************************************************
 
   def numberStream: Source[Int, _] = {
@@ -40,7 +47,7 @@ object Doubler extends App {
       )
       .flatMapConcat(res => {
         res.entity.dataBytes.map { x =>
-          val num = x.utf8String.dropRight(1).toInt * 2
+          val num = extractNum(x) * 2
           printf(num + ", ")
           num
         }
@@ -52,7 +59,7 @@ object Doubler extends App {
       HttpResponse(entity =
         HttpEntity(
           ContentTypes.`text/plain(UTF-8)`,
-          numberStream.map(n => ByteString(s"$n\n"))
+          numberStream.map(n => ByteString(attachPayload(n)))
         )
       )
     case _ => HttpResponse(StatusCodes.NotFound)
