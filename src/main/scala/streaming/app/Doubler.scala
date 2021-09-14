@@ -1,29 +1,21 @@
 package streaming.app
 
 import akka.NotUsed
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.SpawnProtocol
+import akka.actor.typed.{ActorSystem, SpawnProtocol}
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.ContentTypes
-import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.model.HttpMethods._
-import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.model.HttpResponse
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.Connection
-import akka.http.scaladsl.model.ws.Message
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
-import akka.stream.scaladsl.Flow
-import akka.stream.scaladsl.Keep
-import akka.stream.scaladsl.Sink
-import akka.stream.scaladsl.Source
+import akka.http.scaladsl.model.{
+  ContentTypes,
+  HttpEntity,
+  HttpRequest,
+  HttpResponse,
+  _
+}
+import akka.stream.scaladsl.{Flow, Source}
 import akka.util.ByteString
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import scala.util.Failure
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 object Doubler extends App {
 

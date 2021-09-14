@@ -40,7 +40,6 @@ object Streamer extends App {
         printf(x + ", ")
         x
       }
-  //.throttle(1, 50.millis) // infinite source
 
   val requestHandler: HttpRequest => HttpResponse = {
     case HttpRequest(GET, Uri.Path("/"), _, _, _) =>

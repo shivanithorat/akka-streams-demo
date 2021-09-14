@@ -41,4 +41,17 @@ object BackpressureExample extends App {
    *  Flow will buffer last 91-100 elements and those will be passed to the sink
    * */
 
+  //** **************** APIs ***********************
+
+  // source.map(x => x)
+  // source.filter(???)
+  // source.groupBy(???, ???)
+  // source.collect(???)
+  // source.concat(???)
+  // source.zip(???)
+  // source.reduce(???)
+  // source.fold(???)(???)
+  // source.drop(???)
+  // source.dropWhile(???)
+  // source.runForeach(???)
 }
